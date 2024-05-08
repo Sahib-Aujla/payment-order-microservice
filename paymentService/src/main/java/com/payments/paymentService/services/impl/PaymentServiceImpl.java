@@ -39,16 +39,16 @@ public class PaymentServiceImpl implements PaymentService {
 			throw new CustomException("Payment Request Invalid", HttpStatus.NOT_ACCEPTABLE,
 					HttpStatus.NOT_ACCEPTABLE.value());
 		}
-	
+
 		Payment payment = new Payment(paymentRequest.getOrderId(), paymentRequest.getPaymentAmount(), Instant.now(),
 				PaymentStatus.ACCEPTED, paymentRequest.getReferenceNumber());
 		try {
 			this.paymentRepo.save(payment);
-		}
-		catch(Exception e) {
+		} catch (Exception e) {
 			log.error("Error saving to database");
 			payment.setPaymentStatus(PaymentStatus.DECLINED);
-			new PaymentResponse(payment.getId(),payment.getOrderId(),payment.getPaymentAmount(),payment.getPaymentDate(),payment.getPaymentStatus());
+			new PaymentResponse(payment.getId(), payment.getOrderId(), payment.getPaymentAmount(),
+					payment.getPaymentDate(), payment.getPaymentStatus());
 		}
 
 		return new PaymentResponse(payment.getId(), payment.getOrderId(), payment.getPaymentAmount(),
@@ -59,14 +59,21 @@ public class PaymentServiceImpl implements PaymentService {
 	@Override
 	public List<PaymentResponse> getAllPayments() {
 		log.info("sending all payments");
-			
-		List<Payment> payments = this.paymentRepo.findAll();
-		List<PaymentResponse> paymentResponseList = new ArrayList<PaymentResponse>();
 
-		for (var payment : payments) {
-			paymentResponseList.add(new PaymentResponse(payment.getId(), payment.getOrderId(),
-					payment.getPaymentAmount(), payment.getPaymentDate(), payment.getPaymentStatus()));
+		List<PaymentResponse> paymentResponseList = new ArrayList<PaymentResponse>();
+		try {
+			List<Payment> payments = this.paymentRepo.findAll();
+
+			for (var payment : payments) {
+				paymentResponseList.add(new PaymentResponse(payment.getId(), payment.getOrderId(),
+						payment.getPaymentAmount(), payment.getPaymentDate(), payment.getPaymentStatus()));
+			}
+		} catch (Exception e) {
+			log.error("Error saving to database: " + e.getMessage());
+			throw new CustomException("Server error", HttpStatus.SERVICE_UNAVAILABLE,
+					HttpStatus.SERVICE_UNAVAILABLE.value());
 		}
+
 		return paymentResponseList;
 	}
 

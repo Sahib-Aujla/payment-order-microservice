@@ -33,7 +33,14 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public List<Order> getAllOrders() {
 		log.info("Get all orders request received");
-		return this.orderRepo.findAll();
+		try {
+			return this.orderRepo.findAll();
+		} catch (Exception e) {
+			log.error("Error saving to database: " + e.getMessage());
+			throw new CustomException("Server error", HttpStatus.SERVICE_UNAVAILABLE,
+					HttpStatus.SERVICE_UNAVAILABLE.value());
+		}
+
 	}
 
 	@Override
@@ -52,11 +59,12 @@ public class OrderServiceImpl implements OrderService {
 		try {
 			orderRepo.save(order);
 			log.info("Order updated for order Id: " + id);
-		}catch(Exception e) {
-			log.error("Error saving to database: "+e.getMessage());
-			throw new CustomException("Server error",HttpStatus.SERVICE_UNAVAILABLE,HttpStatus.NOT_FOUND.value());
+		} catch (Exception e) {
+			log.error("Error saving to database: " + e.getMessage());
+			throw new CustomException("Server error", HttpStatus.SERVICE_UNAVAILABLE,
+					HttpStatus.SERVICE_UNAVAILABLE.value());
 		}
-	
+
 		return new OrderResponse(order.getId(), order.getCustomerName(), order.getProductName(), order.getOrderDate(),
 				order.getPaymentStatus(), order.getTotalPrice());
 
@@ -75,9 +83,13 @@ public class OrderServiceImpl implements OrderService {
 		log.info("Request received for adding new order.");
 		Order order = new Order(orderRequest.getCustomerName(), orderRequest.getProductName(),
 				orderRequest.getQuantity(), orderRequest.getTotalAmount(), PaymentStatus.PROCESSING, Instant.now());
-
-		orderRepo.save(order);
-
+		try {
+			orderRepo.save(order);
+		} catch (Exception e) {
+			log.error("Error saving to database: " + e.getMessage());
+			throw new CustomException("Server error", HttpStatus.SERVICE_UNAVAILABLE,
+					HttpStatus.SERVICE_UNAVAILABLE.value());
+		}
 		int num = ((int) (Math.random() * 6) + 9);
 
 		PaymentRequest paymentRequest = new PaymentRequest(order.getId(),
@@ -102,12 +114,18 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public boolean deleteOrder(int id) {
 		log.info("Request received for deleting order for order id: " + id);
-		if (orderRepo.existsById(id)) {
-			orderRepo.deleteById(id);
-			log.info("order deleted with orderId : "+id);
-			return true;
+		try {
+			if (orderRepo.existsById(id)) {
+				orderRepo.deleteById(id);
+				log.info("order deleted with orderId : " + id);
+				return true;
+			}
+		} catch (Exception e) {
+			log.error("Error saving to database: " + e.getMessage());
+			throw new CustomException("Server error", HttpStatus.SERVICE_UNAVAILABLE,
+					HttpStatus.SERVICE_UNAVAILABLE.value());
 		}
-		log.info("Order does not exist with orderId: "+id);
+		log.info("Order does not exist with orderId: " + id);
 		return false;
 
 	}
