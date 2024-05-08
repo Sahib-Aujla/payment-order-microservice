@@ -3,12 +3,10 @@ package com.order.api.models;
 import java.math.BigDecimal;
 import java.time.Instant;
 
-import com.order.api.entities.PaymentStatus;
-
 public class OrderResponse {
 	private int orderId;
 	private String customerName;
-	private String ProductName;
+	private String productName;
     private Instant orderDate;
     private PaymentStatus paymentStatus;
     private BigDecimal totalPrice;
@@ -18,7 +16,7 @@ public class OrderResponse {
 		super();
 		this.orderId = orderId;
 		this.customerName = customerName;
-		ProductName = productName;
+		this.productName = productName;
 		this.orderDate = orderDate;
 		this.paymentStatus = paymentStatus;
 		this.totalPrice = totalPrice;
@@ -37,10 +35,10 @@ public class OrderResponse {
 		this.customerName = customerName;
 	}
 	public String getProductName() {
-		return ProductName;
+		return productName;
 	}
 	public void setProductName(String productName) {
-		ProductName = productName;
+		this.productName = productName;
 	}
 	public BigDecimal getTotalPrice() {
 		return totalPrice;

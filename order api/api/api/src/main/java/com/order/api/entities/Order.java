@@ -3,6 +3,8 @@ package com.order.api.entities;
 import java.math.BigDecimal;
 import java.time.Instant;
 
+import com.order.api.models.PaymentStatus;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;

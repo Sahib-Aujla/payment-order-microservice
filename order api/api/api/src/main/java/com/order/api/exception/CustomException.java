@@ -7,7 +7,8 @@ import lombok.Data;
 @Data
 public class CustomException extends RuntimeException {
 
-    private HttpStatusCode errorCode;
+	private static final long serialVersionUID = 1L;
+	private HttpStatusCode errorCode;
     private int status;
 
     public CustomException(String message, HttpStatusCode errorCode, int status) {

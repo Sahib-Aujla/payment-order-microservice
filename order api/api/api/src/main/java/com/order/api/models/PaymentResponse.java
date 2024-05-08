@@ -3,8 +3,6 @@ package com.order.api.models;
 import java.math.BigDecimal;
 import java.time.Instant;
 
-import com.order.api.entities.PaymentStatus;
-
 
 public class PaymentResponse {
 	private int paymentId;

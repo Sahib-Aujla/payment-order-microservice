@@ -10,12 +10,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.order.api.entities.Order;
-import com.order.api.entities.PaymentStatus;
 import com.order.api.exception.CustomException;
 import com.order.api.models.OrderRequest;
 import com.order.api.models.OrderResponse;
 import com.order.api.models.PaymentRequest;
 import com.order.api.models.PaymentResponse;
+import com.order.api.models.PaymentStatus;
 import com.order.api.repositories.OrderRepo;
 import com.order.api.services.OrderService;
 
@@ -32,6 +32,7 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public List<Order> getAllOrders() {
+		log.info("Get all orders request received");
 		return this.orderRepo.findAll();
 	}
 
@@ -44,20 +45,21 @@ public class OrderServiceImpl implements OrderService {
 				.orElseThrow(() -> new CustomException("Order with id " + id + " not found!", HttpStatus.NOT_FOUND,
 						HttpStatus.NOT_FOUND.value()));
 
-		if (order != null) {
-			Order updatedOrder = order;
-			updatedOrder.setCustomerName(orderRequest.getCustomerName());
-			updatedOrder.setProductName(orderRequest.getProductName());
-			updatedOrder.setQuantity(orderRequest.getQuantity());
-			updatedOrder.setTotalPrice(orderRequest.getTotalAmount());
-			orderRepo.save(updatedOrder);
+		order.setCustomerName(orderRequest.getCustomerName());
+		order.setProductName(orderRequest.getProductName());
+		order.setQuantity(orderRequest.getQuantity());
+		order.setTotalPrice(orderRequest.getTotalAmount());
+		try {
+			orderRepo.save(order);
 			log.info("Order updated for order Id: " + id);
-			return new OrderResponse(updatedOrder.getId(), updatedOrder.getCustomerName(),
-					updatedOrder.getProductName(), updatedOrder.getOrderDate(), updatedOrder.getPaymentStatus(),
-					updatedOrder.getTotalPrice());
-
+		}catch(Exception e) {
+			log.error("Error saving to database: "+e.getMessage());
+			throw new CustomException("Server error",HttpStatus.SERVICE_UNAVAILABLE,HttpStatus.NOT_FOUND.value());
 		}
-		return null;
+	
+		return new OrderResponse(order.getId(), order.getCustomerName(), order.getProductName(), order.getOrderDate(),
+				order.getPaymentStatus(), order.getTotalPrice());
+
 	}
 
 	@Override
@@ -67,18 +69,19 @@ public class OrderServiceImpl implements OrderService {
 		}
 		if (orderRequest.getCustomerName() == null || orderRequest.getProductName() == null
 				|| orderRequest.getQuantity() <= 0 || orderRequest.getTotalAmount().compareTo(BigDecimal.ZERO) <= 0) {
-			throw new CustomException("Order Request Invalid", HttpStatus.NOT_ACCEPTABLE, HttpStatus.NOT_ACCEPTABLE.value());
+			throw new CustomException("Order Request Invalid", HttpStatus.NOT_ACCEPTABLE,
+					HttpStatus.NOT_ACCEPTABLE.value());
 		}
 		log.info("Request received for adding new order.");
 		Order order = new Order(orderRequest.getCustomerName(), orderRequest.getProductName(),
 				orderRequest.getQuantity(), orderRequest.getTotalAmount(), PaymentStatus.PROCESSING, Instant.now());
 
 		orderRepo.save(order);
-		
-		int num=((int)(Math.random() * 6) + 9);
 
-		PaymentRequest paymentRequest = new PaymentRequest(order.getId(), UUID.randomUUID().toString().substring(1, num),
-				order.getTotalPrice());
+		int num = ((int) (Math.random() * 6) + 9);
+
+		PaymentRequest paymentRequest = new PaymentRequest(order.getId(),
+				UUID.randomUUID().toString().substring(1, num), order.getTotalPrice());
 
 		try {
 			PaymentResponse response = restTemplate.postForObject("http://localhost:8081/payment", paymentRequest,
@@ -101,8 +104,10 @@ public class OrderServiceImpl implements OrderService {
 		log.info("Request received for deleting order for order id: " + id);
 		if (orderRepo.existsById(id)) {
 			orderRepo.deleteById(id);
+			log.info("order deleted with orderId : "+id);
 			return true;
 		}
+		log.info("Order does not exist with orderId: "+id);
 		return false;
 
 	}
