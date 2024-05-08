@@ -24,38 +24,67 @@ Ensure you have the following software installed on your system:
 ```markdown
 ### Order Microservice API
 
-- **GET /orders**
+- **GET /order**
   Retrieves a list of all orders.
   - **Success Response**: `200 OK`
 
-- **POST /orders**
+- **POST /order/placeOrder**
   Creates a new order.
   - **Body**:
     ```json
     {
-      "customerName": "Alice",
-      "productName": "Laptop",
-      "quantity": 1,
+      "customerName": "Waah",
+      "productName": "keys",
+      "quantity": 3,
       "totalPrice": 1200.00
     }
     ```
   - **Success Response**: `201 Created`
 
-- **PUT /orders/{id}**
+- **PUT /order/update/{id}**
   Updates an existing order.
   - **Body**:
     ```json
     {
-      "customerName": "Alice",
-      "productName": "Laptop Pro",
-      "quantity": 1,
-      "totalPrice": 1500.00
+      "customerName": "gojo",
+      "productName": "keys",
+      "quantity": 3,
+      "totalPrice": 1200.00
     }
     ```
   - **Success Response**: `200 OK`
 
-- **DELETE /orders/{id}**
+- **DELETE /order/delete/{id}**
   Deletes an order.
-  - **Success Response**: `204 No Content`
+  - **Success Response**: `200 OK`
+
+```
+
+
+   
+### API Documentation for Payment Microservice
+
+```markdown
+### Payment Microservice API
+
+- **GET /payment/all**
+  Retrieves a list of all payments.
+  - **Success Response**: `200 OK`
+
+- **POST /payment**
+ processes the payment.
+  - **Body**:
+    ```json
+    {
+      "orderId": "5",
+      "referenceNumber": "14euiqbn",
+      "paymentAmount": 1200.00
+    }
+    ```
+  - **Success Response**: `201 Created`
+
+
+```
+
 
    
