@@ -18,7 +18,12 @@ Ensure you have the following software installed on your system:
 4. **Configure the url for postgres sql in application properties**
 5. **After running the microservices, use the frontend index.html to interact with the application**
 
+## Database Setup
+```sql
 
+  CREATE DATABASE orderdb;
+  CREATE DATABASE paymentdb;
+```
 ### API Documentation for Order Microservice
 
 ```markdown
