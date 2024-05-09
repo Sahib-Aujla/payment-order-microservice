@@ -64,13 +64,12 @@ Ensure you have the following software installed on your system:
   Deletes an order.
   - Success Response: `200 OK`
 
-```
+
 
 
    
 ### API Documentation for Payment Microservice
 
-```markdown
 ### Payment Microservice API
 
 - GET /payment/all
