@@ -30,13 +30,13 @@ Ensure you have the following software installed on your system:
 ```markdown
 ### Order Microservice API
 
-- **GET /order**
+- GET /order
   Retrieves a list of all orders.
-  - **Success Response**: `200 OK`
+  - Success Response: `200 OK`
 
-- **POST /order/placeOrder**
+- POST /order/placeOrder
   Creates a new order.
-  - **Body**:
+  - Body:
     ```json
     {
       "customerName": "Waah",
@@ -45,9 +45,9 @@ Ensure you have the following software installed on your system:
       "totalPrice": 1200.00
     }
     ```
-  - **Success Response**: `201 Created`
+  - Success Response: `201 Created`
 
-- **PUT /order/update/{id}**
+- PUT /order/update/{id}
   Updates an existing order.
   - **Body**:
     ```json
@@ -58,11 +58,11 @@ Ensure you have the following software installed on your system:
       "totalPrice": 1200.00
     }
     ```
-  - **Success Response**: `200 OK`
+  - Success Response: `200 OK`
 
-- **DELETE /order/delete/{id}**
+- DELETE /order/delete/{id}
   Deletes an order.
-  - **Success Response**: `200 OK`
+  - Success Response: `200 OK`
 
 ```
 
@@ -73,13 +73,13 @@ Ensure you have the following software installed on your system:
 ```markdown
 ### Payment Microservice API
 
-- **GET /payment/all**
+- GET /payment/all
   Retrieves a list of all payments.
-  - **Success Response**: `200 OK`
+  - Success Response: `200 OK`
 
-- **POST /payment**
+- POST /payment
  processes the payment.
-  - **Body**:
+  - Body:
     ```json
     {
       "orderId": "5",
@@ -87,7 +87,7 @@ Ensure you have the following software installed on your system:
       "paymentAmount": 1200.00
     }
     ```
-  - **Success Response**: `201 Created`
+  - Success Response: `201 Created`
 
 
 ```
