@@ -7,8 +7,8 @@ This Spring Boot application is designed to manage orders and process payments, 
 Ensure you have the following software installed on your system:
 
 - **Java JDK 21**: Ensure Java 21 or higher is installed.
-- **Maven**: Required for project building and dependency management.
-- **PostgreSQL**: Needed for the database.
+- **Maven**: Required 3.9.0 or higher for project building and dependency management.
+- **PostgreSQL**: Needed version 15 or higher for the database.
 
 ## Setup Instructions
 
