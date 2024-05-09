@@ -13,10 +13,11 @@ Ensure you have the following software installed on your system:
 ## Setup Instructions
 
 1. **Clone or fork the repository**:
-2. **Project includes two microservices**
-3. **Open the location where pom.xml is present and use mvn to build the project**
-4. **Configure the url for postgres sql in application properties**
-5. **After running the microservices, use the frontend index.html to interact with the application**
+2. **Project includes two microservices** 
+3. **Configure the url for postgres sql in application properties**
+4. **Open the location where pom.xml is present and use mvn to build the project  ```mvn clean compile```**
+5.  **Run ```mvn spring-boot:run``` to run the application**
+6. **After running the microservices, use the frontend index.html to interact with the application**
 
 ## Database Setup
 ```sql
